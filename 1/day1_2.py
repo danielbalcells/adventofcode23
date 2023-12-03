@@ -20,24 +20,22 @@ STRING_MAP = {
 }
 
 
-def get_first_digit(line):
-    leftmost_start = 10000
+def get_digit(line, search_function, comparison_function, best_start):
+    best_digit = 0
     for string_number in STRING_MAP.keys():
-        start = line.find(string_number)
-        if start >= 0 and start < leftmost_start:
-            leftmost_start = start
-            first_digit = STRING_MAP[string_number]
-    return first_digit
+        start = search_function(line, string_number)
+        if start != -1 and comparison_function(start, best_start) == start:
+            best_start = start
+            best_digit = STRING_MAP[string_number]
+    return best_digit
+
+
+def get_first_digit(line):
+    return get_digit(line, str.find, min, best_start=10000)
 
 
 def get_last_digit(line):
-    rightmost_start = -1
-    for string_number in STRING_MAP.keys():
-        start = line.rfind(string_number)
-        if start > rightmost_start:
-            rightmost_start = start
-            last_digit = STRING_MAP[string_number]
-    return last_digit
+    return get_digit(line, str.rfind, max, best_start=-1)
 
 
 def get_calibration_value(line):
